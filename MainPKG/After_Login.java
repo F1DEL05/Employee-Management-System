@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTree;
 import javax.swing.JSlider;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -25,9 +26,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class After_Login extends JFrame {
 
+	private static final long serialVersionUID = 1898207910432927265L;
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -35,9 +39,9 @@ public class After_Login extends JFrame {
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
 	private JButton btnNewButton;
-	private JTextField txtName;
-	private JTextField txtPrice;
-	private JTextField txtDepartment;
+	private JTextField Name_Text;
+	private JTextField Price_Text;
+	private JTextField Department_Text;
 	private JLabel Big_Text;
 
 	/**
@@ -76,53 +80,34 @@ public class After_Login extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Jack", new Integer(25000), "IT"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{"David", new Integer(35000), "Software Developer"},
-				{"Linuz", new Integer(28000), "Security Expert"},
-				{"Gerald", new Integer(15000), "IT"},
-				{"Firentis", new Integer(23000), "Network Engineer"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{"David", new Integer(35000), "Software Developer"},
-				{"Linuz", new Integer(28000), "Security Expert"},
-				{"Gerald", new Integer(15000), "IT"},
-				{"Firentis", new Integer(23000), "Network Engineer"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{"David", new Integer(35000), "Software Developer"},
-				{"Linuz", new Integer(28000), "Security Expert"},
-				{"Gerald", new Integer(15000), "IT"},
-				{"Firentis", new Integer(23000), "Network Engineer"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{"David", new Integer(35000), "Software Developer"},
-				{"Linuz", new Integer(28000), "Security Expert"},
-				{"Gerald", new Integer(15000), "IT"},
-				{"Firentis", new Integer(23000), "Network Engineer"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{"David", new Integer(35000), "Software Developer"},
-				{"Linuz", new Integer(28000), "Security Expert"},
-				{"Gerald", new Integer(15000), "IT"},
-				{"Firentis", new Integer(23000), "Network Engineer"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{"David", new Integer(35000), "Software Developer"},
-				{"Linuz", new Integer(28000), "Security Expert"},
-				{"Gerald", new Integer(15000), "IT"},
-				{"Firentis", new Integer(23000), "Network Engineer"},
-				{"Hannah", new Integer(16000), "Network Management"},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-			},
-			new String[] {
-				"Name", "Price", "Department"
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int row=table.getSelectedRow();
+				String Name=(String)table.getModel().getValueAt(row, 0);
+				int Price=(int)table.getModel().getValueAt(row, 1);
+				String Department=(String)table.getModel().getValueAt(row, 2);
+				Name_Text.setText(Name);
+				
+				String Price_s=String.valueOf(Price);
+				Price_Text.setText(Price_s);
+				Department_Text.setText(Department);
+				
 			}
-		) {
+		});
+		scrollPane.setViewportView(table);
+		table.setModel(new DefaultTableModel(new Object[][] {
+			{"Ekrem", new Integer(25000), "IT"},
+			{"Koray", new Integer(28000), "Security Expert"},
+			{"Servet", new Integer(15000), "IT"},
+			{"Eşber", new Integer(25000), "Software Developer"},
+			{"Oray", new Integer(16000), "Network Manager"},
+			{"Neco", new Integer(35000), "Software Developer"},
+		},new String[] {
+			"Name", "Price", "Role"
+		}
+				) {
 			boolean[] columnEditables = new boolean[] {
 				false, false, false
 			};
@@ -130,6 +115,12 @@ public class After_Login extends JFrame {
 				return columnEditables[column];
 			}
 		});
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(0).setPreferredWidth(346);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(1).setPreferredWidth(175);
+		table.getColumnModel().getColumn(2).setResizable(false);
+		table.getColumnModel().getColumn(2).setPreferredWidth(187);
 		
 		panel = new JPanel();
 		panel.setBackground(Color.GRAY);
@@ -141,6 +132,15 @@ public class After_Login extends JFrame {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Big_Text.setText("Add Employee");
+				DefaultTableModel model1=(DefaultTableModel)table.getModel();
+				//-----------------------------------------
+				if (Name_Text.getText().trim().equals("") || Price_Text.getText().trim().equals("") || Department_Text.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(null, "Please fill in all");
+				}
+				else {
+					model1.addRow(new Object[] {Name_Text.getText().toString(),Integer.parseInt(Price_Text.getText()),Department_Text.getText().toString()});
+					JOptionPane.showMessageDialog(null, "Employee Added Successfully");
+				}
 			}
 		});
 		btnNewButton_2.setForeground(Color.WHITE);
@@ -152,6 +152,15 @@ public class After_Login extends JFrame {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Big_Text.setText("Edit Employee");
+				int selected_row=table.getSelectedRow();
+				if (Name_Text.getText().trim().equals("") || Price_Text.getText().trim().equals("") || Department_Text.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(null, "Please fill in all");
+				}else {
+					table.setValueAt((Object)Name_Text.getText(), selected_row, 0);
+					table.setValueAt((Object)Price_Text.getText(), selected_row, 1);
+					table.setValueAt((Object)Department_Text.getText(), selected_row, 2);
+					JOptionPane.showMessageDialog(null, "Employee Edited Successfully");
+				}
 			}
 		});
 		btnNewButton_3.setForeground(Color.WHITE);
@@ -162,7 +171,15 @@ public class After_Login extends JFrame {
 		btnNewButton = new JButton("Remove");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Big_Text.setText("Remove Employee");
+				DefaultTableModel model=(DefaultTableModel)table.getModel();
+				int selected=table.getSelectedRow();
+				if (table.getRowCount()==-1 || selected==-1){
+					
+				}else {
+					model.removeRow(selected);
+					JOptionPane.showMessageDialog(null, "Employee removed successfully !");
+				}
+				
 			}
 		});
 		btnNewButton.setForeground(Color.WHITE);
@@ -170,33 +187,27 @@ public class After_Login extends JFrame {
 		btnNewButton.setBounds(12, 382, 117, 59);
 		panel.add(btnNewButton);
 		
-		txtName = new JTextField();
-		txtName.setText("Name");
-		txtName.setBounds(12, 58, 274, 35);
-		panel.add(txtName);
-		txtName.setColumns(10);
+		Name_Text = new JTextField();
+		Name_Text.setText("Name");
+		Name_Text.setBounds(12, 58, 274, 35);
+		panel.add(Name_Text);
+		Name_Text.setColumns(10);
 		
-		txtPrice = new JTextField();
-		txtPrice.setText("Price");
-		txtPrice.setColumns(10);
-		txtPrice.setBounds(12, 121, 274, 35);
-		panel.add(txtPrice);
+		Price_Text = new JTextField();
+		Price_Text.setText("Price");
+		Price_Text.setColumns(10);
+		Price_Text.setBounds(12, 121, 274, 35);
+		panel.add(Price_Text);
 		
-		txtDepartment = new JTextField();
-		txtDepartment.setText("Department");
-		txtDepartment.setColumns(10);
-		txtDepartment.setBounds(12, 186, 274, 35);
-		panel.add(txtDepartment);
+		Department_Text = new JTextField();
+		Department_Text.setText("Department");
+		Department_Text.setColumns(10);
+		Department_Text.setBounds(12, 186, 274, 35);
+		panel.add(Department_Text);
 		
 		Big_Text = new JLabel("Add Employee");
 		Big_Text.setFont(new Font("Dialog", Font.BOLD, 30));
 		Big_Text.setBounds(12, 12, 274, 34);
 		panel.add(Big_Text);
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(0).setPreferredWidth(346);
-		table.getColumnModel().getColumn(1).setResizable(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(175);
-		table.getColumnModel().getColumn(2).setResizable(false);
-		table.getColumnModel().getColumn(2).setPreferredWidth(187);
 	}
 }

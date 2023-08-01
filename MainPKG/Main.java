@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 
 public class Main extends JFrame {
@@ -68,15 +70,13 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String pass_string=new String(Password_.getPassword());
 				if (Username_.getText().equals("admin") && pass_string.equals("admin")) {
-					Login.setForeground(new Color(0,255,0));
-					Login.setText("Login \n Succesful !");
 					setVisible(false);
+					JOptionPane.showMessageDialog(null, "Login Completed Succesfully");
 					After_Login s=new After_Login();
 					s.setVisible(true);
 				}
 				else {
-					Login.setForeground(new Color(255,0,0));
-					Login.setText("Wrong Username Or \n Password !");
+					JOptionPane.showMessageDialog(null, "Login Failed !");
 				}
 			}
 		});
